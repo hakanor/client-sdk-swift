@@ -24,8 +24,6 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
         // Only used for DocC generation
         .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.3.0"),
-        // Only used for Testing
-        .package(url: "https://github.com/vapor/jwt-kit.git", from: "4.13.4"),
     ],
     targets: [
         .target(
@@ -48,20 +46,6 @@ let package = Package(
             ],
             swiftSettings: [
                 .enableExperimentalFeature("AccessLevelOnImport"),
-            ]
-        ),
-        .testTarget(
-            name: "LiveKitTests",
-            dependencies: [
-                "LiveKit",
-                .product(name: "JWTKit", package: "jwt-kit"),
-            ]
-        ),
-        .testTarget(
-            name: "LiveKitTestsObjC",
-            dependencies: [
-                "LiveKit",
-                .product(name: "JWTKit", package: "jwt-kit"),
             ]
         ),
     ],
