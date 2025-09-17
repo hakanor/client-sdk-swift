@@ -22,7 +22,7 @@ import Synchronization
 #endif
 
 /// Protocol for synchronization primitives that can execute code within a critical section.
-protocol Lock {
+protocol LiveKitLock {
     /// Executes the provided closure within a critical section.
     /// - Parameter fnc: The closure to execute within the lock.
     /// - Returns: The value returned by the closure.
@@ -30,7 +30,7 @@ protocol Lock {
 }
 
 /// Creates the safest/most efficient lock available for the current platform.
-func createLock() -> some Lock {
+func createLock() -> some LiveKitLock {
     #if canImport(Synchronization)
     if #available(iOS 18.0, macOS 15.0, tvOS 18.0, visionOS 2.0, *) {
         return MutexWrapper()
@@ -48,7 +48,7 @@ func createLock() -> some Lock {
 
 #if canImport(Synchronization)
 @available(iOS 18.0, macOS 15.0, tvOS 18.0, visionOS 2.0, *)
-private final class MutexWrapper: Lock {
+private final class MutexWrapper: LiveKitLock {
     private let _mutex = Mutex(())
 
     @inline(__always)
@@ -63,7 +63,7 @@ private final class MutexWrapper: Lock {
 // MARK: - OSAllocatedUnfairLock
 
 @available(iOS 16.0, macOS 13.0, tvOS 16.0, visionOS 1.0, *)
-extension OSAllocatedUnfairLock: Lock where State == () {
+extension OSAllocatedUnfairLock: LiveKitLock where State == () {
     @inline(__always)
     func sync<Result>(_ fnc: () throws -> Result) rethrows -> Result {
         try withLockUnchecked(fnc) // do not check for Sendable fnc
@@ -75,7 +75,7 @@ extension OSAllocatedUnfairLock: Lock where State == () {
 //
 // Read http://www.russbishop.net/the-law for more information on why this is necessary
 //
-private final class UnfairLock: Lock {
+private final class UnfairLock: LiveKitLock {
     private let _lock: UnsafeMutablePointer<os_unfair_lock>
 
     init() {
