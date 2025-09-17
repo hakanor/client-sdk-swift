@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import DequeModule
 import Foundation
 
 internal import LiveKitWebRTC
