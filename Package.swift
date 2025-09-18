@@ -21,12 +21,7 @@ let package = Package(
     dependencies: [
         // LK-Prefixed Dynamic WebRTC XCFramework
         .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.29.0"),
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.6.2"),
         .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.0"),
-        // Only used for DocC generation
-        .package(url: "https://github.com/apple/swift-docc-plugin.git", from: "1.3.0"),
-        // Only used for Testing
-        .package(url: "https://github.com/vapor/jwt-kit.git", from: "4.13.4"),
     ],
     targets: [
         .target(
@@ -39,7 +34,6 @@ let package = Package(
                 .product(name: "SwiftProtobuf", package: "swift-protobuf"),
                 .product(name: "DequeModule", package: "swift-collections"),
                 .product(name: "OrderedCollections", package: "swift-collections"),
-                .product(name: "Logging", package: "swift-log"),
                 "LKObjCHelpers",
             ],
             exclude: [
@@ -51,21 +45,7 @@ let package = Package(
             swiftSettings: [
                 .enableExperimentalFeature("AccessLevelOnImport"),
             ]
-        ),
-        .testTarget(
-            name: "LiveKitTests",
-            dependencies: [
-                "LiveKit",
-                .product(name: "JWTKit", package: "jwt-kit"),
-            ]
-        ),
-        .testTarget(
-            name: "LiveKitTestsObjC",
-            dependencies: [
-                "LiveKit",
-                .product(name: "JWTKit", package: "jwt-kit"),
-            ]
-        ),
+        )
     ],
     swiftLanguageModes: [
         .v5, // opt-out from dynamic actor isolation checks
